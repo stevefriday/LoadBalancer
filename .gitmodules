@@ -1,0 +1,3 @@
+[submodule "cookbooks/haproxy"]
+	path = cookbooks/haproxy
+	url = https://github.com/opscode-cookbooks/haproxy.git

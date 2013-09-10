@@ -1,0 +1,61 @@
+Vagrant.require_plugin('vagrant-hostmanager')
+
+domain = 'mydomain.com'
+
+# Define the haProxy Node
+hanode = { :hostname => 'node1', :ip => '10.125.0.11', :box => 'ubuntu1204-chef'}
+
+# Define the Apache nodes
+testnodes = [
+  { :hostname => 'node2', :ip => '10.125.0.12', :box => 'ubuntu1204-chef'},
+  { :hostname => 'node3', :ip => '10.125.0.13', :box => 'ubuntu1204-chef'}
+]				 
+				 
+
+Vagrant.configure("2") do |config|
+
+    #config.proxy.http = "http://david_j_trotter:PASSWORD@proxy:80"
+    
+    config.vm.define hanode[:hostname] do |node_config|
+      # configure the box, hostname and networking 
+      node_config.vm.box = hanode[:box]
+      node_config.vm.hostname = hanode[:hostname] + '.' + domain
+      node_config.vm.network :private_network, ip: hanode[:ip]
+
+	  # configure hostmanager
+      node_config.hostmanager.enabled = true
+      node_config.hostmanager.manage_host = true
+      node_config.hostmanager.ignore_private_ip = false
+      node_config.hostmanager.include_offline = true
+      node_config.hostmanager.aliases = hanode[:hostname]
+
+      # use the Chef provisioner to install haproxy    
+      node_config.vm.provision :chef_solo do |chef|
+       chef.add_recipe "apt"
+	   chef.add_recipe "haproxy"
+      end
+	end
+
+  
+  testnodes.each do |node|
+    config.vm.define node[:hostname] do |node_config|
+      # configure the box, hostname and networking 
+      node_config.vm.box = node[:box]
+      node_config.vm.hostname = node[:hostname] + '.' + domain
+      node_config.vm.network :private_network, ip: node[:ip]
+
+	  # configure hostmanager
+      node_config.hostmanager.enabled = true
+      node_config.hostmanager.manage_host = true
+      node_config.hostmanager.ignore_private_ip = false
+      node_config.hostmanager.include_offline = true
+      node_config.hostmanager.aliases = node[:hostname]
+
+      # use the Chef provisioner to install apache    
+      node_config.vm.provision :chef_solo do |chef|
+	   chef.add_recipe "apt"
+       chef.add_recipe "apache2"
+      end
+    end
+  end
+end

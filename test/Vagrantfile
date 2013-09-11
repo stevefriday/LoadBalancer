@@ -14,7 +14,7 @@ testnodes = [
 
 Vagrant.configure("2") do |config|
 
-    #config.proxy.http = "http://david_j_trotter:PASSWORD@proxy:80"
+    #config.proxy.http = "http://{domainUsername}:{domainPassword}@proxy:80"
     
     config.vm.define hanode[:hostname] do |node_config|
       # configure the box, hostname and networking 

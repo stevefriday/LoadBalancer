@@ -1,14 +1,14 @@
 Vagrant.require_plugin('vagrant-hostmanager')
 
-domain = 'mydomain.com'
+domain = 'haProxyTest.com'
 
 # Define the haProxy Node
 hanode = { :hostname => 'node1', :ip => '10.125.0.11', :box => 'ubuntu1204-chef'}
 
 # Define the Apache nodes
 testnodes = [
-  { :hostname => 'node2', :ip => '10.125.0.12', :box => 'ubuntu1204-chef'},
-  { :hostname => 'node3', :ip => '10.125.0.13', :box => 'ubuntu1204-chef'}
+  { :hostname => 'node2-Apache1', :ip => '10.125.0.12', :box => 'ubuntu1204-chef'},
+  { :hostname => 'node3-Apache2', :ip => '10.125.0.13', :box => 'ubuntu1204-chef'}
 ]				 
 				 
 

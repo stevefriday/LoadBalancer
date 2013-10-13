@@ -108,6 +108,9 @@ template "/etc/haproxy/haproxy.cfg" do
    notifies :restart, resources(:service => "haproxy")
 end
 
-execute "starthaproxy" do
-  command "haproxy -f /etc/haproxy/haproxy.cfg"
+unless `ps -N |grep haproxy` != ""
+   execute "starthaproxy" do
+     command "haproxy -f /etc/haproxy/haproxy.cfg"
+   end
 end
+

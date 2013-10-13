@@ -57,6 +57,8 @@ public_iface = public_net.interface
 public_net_db = data_bag_item('crowbar', 'public_network')
 admin_net_db = data_bag_item('crowbar', 'admin_network')
 service_name = node[:haproxy][:config][:environment]
+proposal_name = service_name.split('-')
+bcproposal = "bc-haproxy-"+proposal_name[2]
 domain = node[:domain]
 public_ip = public_net_db["allocated_by_name"]["#{service_name}.#{domain}"]["address"]
 admin_ip = admin_net_db["allocated_by_name"]["#{service_name}.#{domain}"]["address"]
@@ -70,7 +72,7 @@ node.set["haproxy"]["admin_host"] = "#{service_name}.#{domain}"
 
 node.save
 
-adminfixedip_db = data_bag_item('crowbar', 'bc-haproxy-proposal')
+adminfixedip_db = data_bag_item('crowbar', bcproposal)
 admincont1 = adminfixedip_db["deployment"]["haproxy"]["elements"]["haproxy"][0]
 admincont2 = adminfixedip_db["deployment"]["haproxy"]["elements"]["slave"][0]
 admincont3 = adminfixedip_db["deployment"]["haproxy"]["elements"]["slave"][1]
